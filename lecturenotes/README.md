@@ -16,4 +16,4 @@ For each part, there is an RMarkdown file (`*.Rmd`) that you can open in RStudio
 3. [R5](https://numlds.github.io/bootcamp-2025/lecturenotes/R5_lecturenotes): Advanced manipulation and dplyr
 4. [R6](https://numlds.github.io/bootcamp-2025/lecturenotes/R6_lecturenotes): Advanced manipulation and data.table
 5. [R7](https://numlds.github.io/bootcamp-2025/lecturenotes/R7_R-pt3-ggplot_lecturenotes_kr_rm): Advanced visualization with ggplot
-6. For the final exercise, [see instructions here](https://github.com/MLDS/bootcamp-2025/blob/master/exercises/R8_final-exercise-instructions.md).
+6. For the final exercise, [see instructions here](https://github.com/NUMLDS/bootcamp-2025/blob/master/exercises/R8_final-exercise-instructions.md).
