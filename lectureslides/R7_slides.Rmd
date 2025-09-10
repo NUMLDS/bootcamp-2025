@@ -109,7 +109,7 @@ You can create a new script file for your exercises in this session, or you can 
 ```{r scatterplot exercise}
 ggplot(gapminder07) + 
   geom_point(aes(x = log(pop), y = log(gdpPercap))) + 
-  labs(title = "Relationship between GDP per capita and population in 2007", x = "Logged GDP per capita", y = "Logged life expectancy")
+  labs(title = "Relationship between GDP per capita and population in 2007", x = "Logged population", y = "Logged GDP per capita")
 ```
 
 # Preparing your data
