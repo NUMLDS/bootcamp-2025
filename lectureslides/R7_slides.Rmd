@@ -32,7 +32,6 @@ In ggplot, graphics are built by supplying *data* and *mapping* of data values t
 > - Highly customizable and extensible.
 > - Designed to work with `dplyr` and other `tidyverse` packages.
 > - In use for over 10 years, meaning that help is widely available.
-> - Wide variety of avilable [extensions](http://www.ggplot2-exts.org/gallery/)
 
 ## Useful resources
 
@@ -262,12 +261,13 @@ long_merged_energy %>%
   labs(title="Total output per energy source over Sept 3-9", y="Output (MW)", x="Source")
 ```
 
-# Additional layers
+## Additional layers
 
-## Labels
-
-> - We have already seen that the `labs()` layer can add titles (`title=`) and axis labels (`x=` and `y=`) to a plot.
-> - It can also add subtitles (`subtitle=`) and captions (`caption=`).
+> - **Labels**: titles, axis labels, subtitles, captions, etc.
+> - **Scales**: scale_alpha, scale_color, scale_fill, etc.
+> - **Themes**: theme_grey, theme_bw, theme_dark, theme_light, etc.
+> - **Theme layer**: angle of labels, etc.
+> - **Coordinate system adjustments**: coord_flip, coord_transform, etc.
 
 ## Labels
 
@@ -285,21 +285,10 @@ No exercise this time, but we will practice this later.
 
 ## Scales
 
-> - Scales allow you to manipulate the relationship between data values and aesthetics beyond aesthetic mapping.
->     - AKA: scales "control the details of how data values are translated to visual properties" (quote from [reference guide](https://ggplot2.tidyverse.org/reference/index.html#section-aesthetics)).
-> - For example:
->     - `scale_alpha`: control transparency settings
->     - `scale_color` and `scale_fill`: control color palettes and other aspects of data mapped to colors
->     - `scale_x` and `scale_y`: control the position of axis markers
-> - The cheatsheet is your friend!
-
-## Scales
-
 Task:<br>Recreate line plot of imports over time, but label x-axis with hours rather than dates.
 
 Steps:
 
-> 0. Check the cheatsheet!
 > 1. Supply `imports` data to `ggplot()`.
 > 2. Add a `geom_line()` layer and map appropriate `x` and `y` variables.
 > 3. Add a `scale_x_datetime()` layer and use `date_labels=` and `date_breaks=` arguments to modify x-axis labels and breaks.
@@ -320,16 +309,7 @@ See lecture notes for details on what's going on inside the scale function. Or r
 No exercise this time, but we will practice this later.
 </aside>
 
-## Themes: presets
-
-ggplot comes with several preset themes that can be added as layers, including:
-
-- `theme_grey()`: default
-- `theme_bw()`: strip colors, including grey gradients
-- `theme_dark()` and `theme_light()`: change the background of the coordinate system
-- `theme_minimal()` and `theme_void()`: see reference guide for details
-
-## Example: Imports over time
+## Themes example: Imports over time
 
 ```{r theme preset}
 imports %>%
@@ -339,16 +319,7 @@ imports %>%
   theme_minimal()
 ```
 
-## Themes: manual
-
-The `theme()` layer lets you modulate many components of the theme, including: 
-
-> - Angle, position, and other characteristics of axis labels (e.g. `axis.labels.x = `).
-> - Angle, position, and other characteristics of legends (e.g. `legend.position = `).
-> - Characteristics of the background of the plot (e.g. `plot.background = `).
-> - For a full list of the components that can be modified, see the help file for `ggplot2::theme()`.
-
-## Example: Imports over time
+## Theme layer example: Imports over time
 
 ```{r theme manual}
 imports %>%
@@ -358,14 +329,7 @@ imports %>%
   theme(axis.text.x=element_text(angle=45, hjust=1, size=12))
 ```
 
-## Coordinate system adjustment
-
-> - `coord_flip()` is the default Cartesian coordinate system used; by explicitly calling this function, you can change the limits of the `x` and `y` axes from their defaults
-> - `coord_fixed()` sets a fixed aspect ratio between the `x` and `y` axes
-> - `coord_transform()` lets you transform the Cartesian coordinates using functions like `sqrt` or `log`
-> - `coord_polar()` changes the coordinate system to polar coordinates rather than a Cartesian system
-
-## Example: coord_flip()
+## Coordinate system adjustment example: coord_flip()
 
 ```{r coord_flip pre}
 long_gen %>% 
@@ -386,19 +350,19 @@ long_gen %>%
   coord_flip()
 ```
 
-## Stats
-
-> - There are several `stat` functions in ggplot that enable you to conduct statistical transformations of your data prior to plotting. 
-> - `stat` and `geom` layers can be used interchangeably, as each `stat` layer has a `geom` argument and vice versa. 
-> - You may want to use stat layers or arguments to override default settings, or to use transformed versions of a variable in your plot.
-> - For more, see [Chapter 3.7 of the R for data science online textbook](http://r4ds.had.co.nz/data-visualisation.html#statistical-transformations).
-
 # Visualizing grouped data
 
 > - We often want to visualize multiple variables, or a variable that can be divided into groups, in one graphic.
 > - There are two broad principles for visualizing grouped variables in R:
->     - Identify a grouping variable in a `geom()` using the `group = ` argument, and demarcate the distinct objects created per group in some way.
->     - Use facets to generate geometric objects in separate coordinate systems for each group.
+>     - Using the `group = ` argument
+>     - Using facets
+
+## Visualizing grouped data
+
+> - Colors and fill
+> - Position adjustment
+> - Shapes and line types
+> - Scale size and color
 
 ## Colors and fill
 
@@ -436,7 +400,7 @@ long_merged_energy %>%
   labs(title="Wind vs. Solar vs. Geothermal generation", subtitle="Hourly data from September 3-9, 2018", x="Hour", y="Output (MW)")
 ```
 
-## Customizing with scale_color layers
+## Customizing with scale_color layer
 
 ```{r aes colors 2}
 long_merged_energy %>% filter(source=="wind"|source=="solar"|source=="geothermal") %>% 
@@ -445,19 +409,6 @@ long_merged_energy %>% filter(source=="wind"|source=="solar"|source=="geothermal
   scale_color_brewer(palette="Accent", name="Energy source") + 
   labs(title="Wind vs. Solar vs. Geothermal generation", subtitle="Hourly data from September 3-9, 2018", x="Hour", y="Output (MW)")
 ```
-
-## Colors and fill
-
-- `col=` is used to color objects like lines and points
-- `fill=` is used to color objects like columns and histograms
-    - `col=` will create colored outlines for such objects
-- After some trial and error, this will become intuitive
-
-## Position adjustment
-
-> - Once we introduce a grouping variable to a `geom` function, we generate multiple geometric objects on the same plot.
-> - Colors and fill help us distinguish each object from other objects.
-> - Another way to distinguish objects, often used together with color/fill, is *position adjustment*.
 
 ## Example: Energy use by day
 
@@ -493,7 +444,7 @@ long_merged_energy %>%
 > - What if our goal is to compare what portion of output per day each source comprises?
 >     - We can use `position="fill"` to normalize height of stacked columns.
 
-## Example: Energy use by day (pos dodge)
+## Example: Energy use by day (position dodge)
 
 ```{r col dodge}
 long_merged_energy %>% 
@@ -505,7 +456,7 @@ long_merged_energy %>%
   labs(title="Energy use by day", x="Day", y="Output (MW)")
 ```
 
-## Example: Energy use by day (pos fill)
+## Example: Energy use by day (position fill)
 
 ```{r col fill}
 long_merged_energy %>% 
@@ -517,40 +468,18 @@ long_merged_energy %>%
   labs(title="Energy use by day", x="Day", y="Output (MW)")
 ```
 
-## Shapes and linetypes
-
-> - Colors/fill and position adjustment are the most common and intuitive way to distinguish geometric objects from each other.
-> - Shapes and linetypes are two other ways.
-> - The idea here is to modify what the object actually looks like.
-
 ## Example: Energy source group, by day
 
 Task:<br>Create a line graph of the output by day, with a different line for each regrouped group (renewable, hydro, etc.)
 
 Steps:
 
-> 1. Prepare data frame that summarizes output by date and "group" from `regroup`.
-> 2. Supply modified data frame to `ggplot()`.
-> 3. Two choices!
+> 1. Supply long_merged_energy_regroup data frame to `ggplot()`.
+> 2. Two choices!
 >     1. Add `geom_line()` and `geom_point()` with `shape=group`.
 >     2. Add `geom_line()` with `linetype=group`.
 
-## Example: Energy source group by day
-
-```{r prep shapes}
-# Prepare data
-long_merged_energy_regroup <- long_merged_energy %>%
-  rename(type = source) %>% 
-  merge(regroup, by = "type") %>% 
-  mutate(date=lubridate::date(datetime)) %>% 
-  group_by(date, group) %>%
-  summarise(output=sum(output))
-
-# Take a look at our prepared data
-head(long_merged_energy_regroup)
-```
-
-## Example: Energy source group, by day
+## Example: Energy source group, by day (shape = group)
 
 ```{r aes shapes}
 long_merged_energy_regroup %>% 
@@ -560,7 +489,7 @@ long_merged_energy_regroup %>%
   labs(title="Output by source group over time", subtitle="Data collected during September 3-9, 2018", x="Date", y="Output (MW)")
 ```
 
-## Example: Energy source group, by day
+## Example: Energy source group, by day (linetype = group)
 
 ```{r aes linetypes}
 long_merged_energy_regroup %>% 
@@ -569,13 +498,7 @@ long_merged_energy_regroup %>%
   labs(title="Output by source group over time", subtitle="Data collected during September 3-9, 2018", x="Date", y="Output (MW)")
 ```
 
-## Sizes and alpha
-
-> - `size=` and `alpha=` inside `aes()` modulate the size and transparency of geom objects based on some data value.
-> - They are particularly useful when you want to distinguish objects based on some *continuous* variable.
-> - Let's return to the Gapminder data for an example.
-
-## Example: Life expectancy over GDP
+## Scale example: Life expectancy over GDP
 
 ```{r aes size}
 gapminder07 %>% 
@@ -671,15 +594,7 @@ long_gen %>%
   labs(title="Generation over time, by energy source", subtitle="Hourly data from September 3-9, 2018", x="Hour", y="Output (MW)")
 ```
 
-## Exercise 6: Facets
-
-Task:<br>Alter the facet plot by:
-
-> - Making the line in each plot a different color
-> - Making the lines thicker
-> - Moving the legend to the bottom
-
-## Exercise 6: Facets
+## Example (version 2): Comparing generation patterns
 
 ```{r facet ex}
 long_gen %>% 
@@ -711,17 +626,3 @@ Three ways to save images created by ggplot:
 This is the end of the R lecture sessions.
 
 After a short break, we will return for a cumulative exercise that combines the skills you have learned since Monday. 
-
-# Final Exercise
-
-The instructions are in a markdown file in the `exercises` folder. Create a new RMarkdown file (save it using this naming convention: `FinalRExercise_LastnameFirstname.Rmd`), in which you will complete the exercise.
-
-You can work in small groups, but write up your code separately.
-
-Raise your hand if you need help!
-
-## Optional Submissions
-
-You've created several RMarkdown files over the past three days. Since you stored these in a forked repo, it is possible to create a pull request and 'submit' these changes to the base repo. This is *optional*, but gives you a chance to explore Github functionality and share your work with your classmates. 
-
-Before you submit your completed exercises, *move every new file in your repo to the* `submissions` *folder*. This ensures that we won't inadvertently make changes to the session materials. Then, create a new pull request, asking to merge changes from your fork to the base repository.
