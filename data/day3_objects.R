@@ -33,3 +33,11 @@ merged_energy <- merge(generation, imports, by = "datetime")
 long_merged_energy <- melt(merged_energy, id.vars = "datetime",
                            variable.name = "source",
                            value.name = "output")
+
+# Prep long_merged_energy_regroup
+long_merged_energy_regroup <- long_merged_energy %>%
+  rename(type = source) %>% 
+  merge(regroup, by = "type") %>% 
+  mutate(date=lubridate::date(datetime)) %>% 
+  group_by(date, group) %>%
+  summarise(output=sum(output))
